@@ -1,0 +1,101 @@
+<%- include('../partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<body>
+<h1>Formulaire de creation d'un livre  </h1>
+<form action="/books" method="post">
+  <input name="id" type="hidden" value="<%= locals.books && books.id %>">
+
+    <div class="ui inverted segment">
+        <div class="ui inverted form">
+          <div class="two fields">
+            <div class="field">
+              <label> Titre  </label>
+              <input name="titre" placeholder="Titre" type="text" value="<%= locals.books && books.title %>">
+            </div>
+            <div class="field">
+                <label> Auteur</label>
+                <input name="auteur"placeholder="Auteur" type="text " value="<%= locals.books && books.author %>  ">
+              </div>
+              <div class="field">
+                <label> Genre </label>
+                <input name= "genre"placeholder="Genre" type="text"value="<%= locals.books && books.genre %>" >
+              </div>
+              <div class="field">
+                <label> Date d'entrée </label>
+                
+                <input name= "entrée"placeholder="Date d'entrée" type="date"  id="dateinput" value="<%= locals.books && books.release_date %>" >
+              </div>
+              <div class="field">
+                <label> Date de sortie </label>
+                <input  name= "sortie"placeholder="Date de sortie" type="date"   id="dateinput" value="<%= locals.books && books.entry_date %>">
+              </div>
+              <%if(locals.books){%> 
+          <div id="btnCreate" class="ui submit button">Modifier le livre  </div>
+          <%}else{%>
+            <div id="btnCreate" class="ui submit button">Créer un livre  </div>
+            <% }%>
+        </div>
+      </div>
+
+</body>
+<footer>
+<%- include('../partials/footer'); %>
+</footer>
+
+<script>
+
+document.getElementById("btnCreate").addEventListener('click',(event)=>{
+  // collecter les infos du formulaire dans un object
+  const id = document.getElementsByName("id")[0].value;
+  const titre = document.getElementsByName("titre")[0].value;
+  const auteur = document.getElementsByName("auteur")[0].value;
+  const genre = document.getElementsByName("genre")[0].value;
+  const entrée = document.getElementsByName("entrée")[0].value;
+  const sortie = document.getElementsByName("sortie")[0].value;
+
+  const formData = {
+    titre: titre,
+    auteur: auteur,
+    genre: genre,
+    entrée:entrée,
+    sortie: sortie,
+  };
+  // envoyer le POST de axios sur la route pour Ajouter/modifier
+  if(id!==""){
+    axios.put('/books/'+id+"/?token=<%= token  %>", formData,
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      if(response.data=="ok"){
+        window.location = "/books?token=<%= token  %>"
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }else{
+    axios.post('/books/?token=<%= token  %>', formData,
+    {
+      
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      if(response.data=="ok"){
+        window.location = '/books?token=<%= token  %>'
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+  
+})
+
+</script>
+</html>

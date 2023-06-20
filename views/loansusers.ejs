@@ -1,0 +1,33 @@
+<%- include('./partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<div style="display: flex; align-items: center; justify-content: space-between;">
+  <h2>Voici la liste de tes prets </h2>
+  <% if (userType === 'Subscriber') { %>
+  <% } %>
+</div>
+
+<table class="ui five column table">
+    <thead>
+
+        <tr>
+            <td>Nom de l'emprunteur</td>
+            <td>Livre emprunté</td>
+            <td>Date de prêt</td>
+            <td>Date de retour</td>
+          </tr>
+
+    </thead>
+    <tbody>
+        <% loansusers.forEach(function(loansusers) { %>
+          <% if( userId === loansusers.idUsers ) { %>
+          <tr>
+            <td><%= loansusers.userName %> <%= loansusers.firstName %></td>
+            <td><%= loansusers.bookTitle %></td>
+            <td><%= loansusers.Date_loans %></td>
+            <td><%= loansusers.Return_date %></td>
+          </tr>
+          <% } %>
+        <% }); %>
+      </tbody>
+</table>

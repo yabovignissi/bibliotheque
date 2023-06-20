@@ -1,0 +1,105 @@
+<%- include('../partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<body>
+<h1>Formulaire de creation d'un adherent </h1>
+<form action="/employee" method="post">
+  <input name="id" type="hidden" value="<%= locals.adherent && adherent.id %>">
+
+    <div class="ui inverted segment">
+        <div class="ui inverted form">
+          <div class="two fields">
+            <div class="field">
+              <label> Nom  </label>
+              <input name="nom" placeholder="Name" type="text" value="<%= locals.adherent && adherent.name %>">
+            </div>
+            <div class="field">
+                <label> Prénom</label>
+                <input name="Prénom"placeholder="First Name" type="text" value="<%= locals.adherent && adherent.firstname %>">
+              </div>
+              <div class="field">
+                <label> E-mail </label>
+                <input name= "E-mail"placeholder="E-mail" type="text" value="<%= locals.adherent && adherent.email %>">
+              </div>
+              <div class="field">
+                <label> Adresse Postale </label>
+                <input name= "adresse"placeholder="adresse" type="text" value="<%= locals.adherent && adherent.address %>">
+              </div>
+              <div class="field">
+                <label> Numéro de téléphone </label>
+                <input  name= "Numéro de téléphone"placeholder="Téléphone" type="text" value="<%= locals.adherent && adherent.telephone %>">
+              </div>
+              <div class="field">
+                <label> Mot de passe  </label>
+                <input name="Mot de passe" placeholder="Password" type="text" value="<%= locals.adherent && adherent.password %>">
+              </div>
+                <input name="abonne" type="hidden" value="Subscriber">
+
+              <% if(locals.adherent){%>
+                <div id="btnCreate" class="ui submit button">Modifier un adhérent  </div>
+                <%}else {%>
+                 <div id="btnCreate" class="ui submit button">Créer un adhérent  </div>
+                <% }%>
+        </div>
+      </div>
+
+</body>
+<footer>
+<%- include('../partials/footer'); %>
+</footer>
+
+<script>
+
+document.getElementById("btnCreate").addEventListener('click',(event)=>{
+  // collecter les infos du formulaire dans un object
+  const id = document.getElementsByName("id")[0].value;
+  const nom = document.getElementsByName("nom")[0].value;
+  const prenom = document.getElementsByName("Prénom")[0].value;
+  const adresse = document.getElementsByName("adresse")[0].value;
+  const email = document.getElementsByName("E-mail")[0].value;
+  const telephone = document.getElementsByName("Numéro de téléphone")[0].value;
+  const motdepasse = document.getElementsByName("Mot de passe")[0].value;
+  const abonne= document.getElementsByName("abonne")[0].value
+
+
+  const formData = {
+    nom: nom,
+    prenom: prenom,
+    adresse: adresse,
+    email: email,
+    telephone: telephone,
+    motdepasse: motdepasse,
+    abonne:abonne
+  };
+  // envoyer le POST de axiox sur la route pour Ajouter/modifier
+  if(id!== "") {
+    axios.put('/adherent/'+ id+"/?token=<%= token  %>", formData,{
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      console.log(response.data)
+      if(response.data == "data updated"){
+        window.location = "/adherent?token=<%= token  %>"
+      }
+    })
+    .catch(error => console.log(error))
+  } else {
+    axios.post('/adherent/?token=<%= token  %>', formData, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }}
+)
+    .then(response => {
+      if(response.data == "ok"){
+        window.location = "/adherent?token=<%= token  %> "
+      }
+    })
+    .catch(error => console.log(error))
+  }
+  
+})
+
+</script>
+</html>

@@ -1,0 +1,103 @@
+<%- include('../partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<body>
+<h1>Formulaire de creation de pret </h1>
+<form action="/loans" method="post">
+  <input name="id" type="hidden" value="<%= locals.loans && loans.id %>">
+
+    <div class="ui inverted segment">
+        <div class="ui inverted form">
+          <div class="two fields">
+            <div class="field">
+              <label> Nom de l'emprunteur  </label>
+              <select name="idUsers" id="user-select">
+                <option value="">-- Choisissez un utilisateur --</option>
+                   <% users.forEach(user => { %>
+                <option value="<%= user.id %>"><%= user.name %><%= user.firstname %></option>
+                <% }); %>
+              </select>
+            </div>
+            <div class="field">
+                <label> Nom  du livre</label>
+                <select name="idBooks" id="user-select">
+                  <option value="">-- Choisissez un livre --</option>
+                     <% books.forEach(books => { %>
+                  <option value="<%= books.id %>"><%= books.title %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="field">
+                <label> Date de pret </label>
+                <input type="date" name="date"  id="dateinput" value="<%= locals.loans && loans.Date_loans %>">
+              </div>
+              <div class="field">
+                <label> Date de retour </label>
+                <input type="date" name="retour" id="dateinput" value="<%= locals.loans && loans.Return_date %>">
+              </div>
+              <%if(locals.loans){%> 
+          <div id="btnCreate" class="ui submit button">Modifier le pret  </div>
+          <%}else{%>
+            <div id="btnCreate" class="ui submit button">Créer un pret  </div>
+            <% }%>
+        </div>
+      </div>
+
+</body>
+<footer>
+<%- include('../partials/footer'); %>
+</footer>
+
+<script>
+
+document.getElementById("btnCreate").addEventListener('click',(event)=>{
+  // collecter les infos du formulaire dans un object
+  const id = document.getElementsByName("id")[0].value;
+  const idUsers = document.getElementsByName("idUsers")[0].value;
+  const idBooks = document.getElementsByName("idBooks")[0].value;
+  const date = document.getElementsByName("date")[0]  .value;
+  const retour = document.getElementsByName("retour")[0].value;
+
+  console.log(retour)
+
+  const formData = {
+    idUsers:idUsers,
+    idBooks:idBooks,
+    date:date,
+    retour:retour,
+  };
+  // envoyer le POST de axios sur la route pour Ajouter/modifier
+  if(id!==""){
+    axios.put('/loans/'+id+"/?token=<%= token  %>", formData,
+    {
+      
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      if(response.data=="super"){
+        window.location = "/loans?token=<%= token  %>"
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }else{
+    axios.post('/loans/?token=<%= token  %>', formData,{
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      if(response.data=="super"){
+        window.location = "/loans?token=<%= token  %>"
+      }
+    })
+    .catch(error => console.log(error));
+  }
+  
+})
+
+</script>
+</html>

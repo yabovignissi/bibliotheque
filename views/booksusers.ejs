@@ -1,0 +1,27 @@
+<%- include('./partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<div style="display: flex; align-items: center; justify-content: space-between;">
+  <h2>Voici la liste des livres disponibles </h2>
+  <% if (userType === 'Subscriber') { %>
+  <% } %>
+</div>
+
+<table class="ui five column table">
+    <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Auteur</th>
+          <th>Genre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books.forEach(book => { %>
+          <tr>
+            <td><%= book.title %></td>
+            <td><%= book.author %></td>
+            <td><%= book.genre %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+</table>

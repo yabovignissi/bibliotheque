@@ -1,0 +1,91 @@
+<%- include('./partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<div style="display: flex; align-items: center; justify-content: space-between;">
+  <h2>Voici la liste des books </h2>
+  <% if (userType === 'Employee') { %>
+    <a href="/createbooks/?token=<%= token  %>">
+      <button class="ui secondary basic button" style="padding: 5px;display: flex; align-items: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width:30px;height: 30px;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+        </svg>
+        Ajoutez un livre
+      </button>
+    </a>
+  <% } %>
+</div>
+
+
+  <table class="ui five column table">
+    <thead>
+
+      <tr>
+        <th>Titre </th>
+        <th>Auteur</th>
+        <th>Genre du livre </th>
+            <th>Date d'entrée</th>
+            <th>Date de sortie</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% books.forEach(function(books) { %>
+
+        <tr>
+          <td>
+            <%= books.title %>  <%= books.firstname %>
+            <button class="Bouton principal de l’interface utilisateur" _msttexthash="180024" _msthash="280" onclick="deletebooks('<%= books.id %>?token=<%= token  %>')"> Supprimer </button>
+          </td>
+
+
+          <td>
+            <%= books.author %>
+              <button class="Bouton principal de l’interface utilisateur" _msttexthash="180024" _msthash="280" onclick="updtatebooks('<%= books.id  %>?token=<%= token  %>')"> Modifier </button>
+            
+          </td>
+          <td>
+            <%= books.genre %>
+          </td>
+          <td>
+            <%= books.release_date %>
+          </td>
+          <td>
+              <%= books.entry_date %>
+
+          </td>
+        </tr>
+
+        <% }); %>
+
+
+
+
+    </tbody>
+
+  </table>
+  <script>  
+  
+  function deletebooks(Id) {
+  axios.delete('/books/'+Id,
+  {
+    headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+  })
+    .then(function (response) {
+      console.log(response);
+      location.reload();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+function updtatebooks(id){
+
+ location= ('/createbooks/' +id )
+}
+
+;</script>
+
+  <footer>
+    <%- include('./partials/footer'); %>
+  </footer>

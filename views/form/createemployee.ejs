@@ -1,0 +1,99 @@
+<%- include('../partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<body>
+<h1>Formulaire de creation d'un employé </h1>
+<form action="/employee" method="post">
+  <input name="id" type="hidden" value="<%= locals.employee && employee.id %>">
+
+    <div class="ui inverted segment">
+        <div class="ui inverted form">
+          <div class="two fields">
+            <div class="field">
+              <label> Nom  </label>
+              <input name="nom" placeholder="Name" type="text" value="<%= locals.employee && employee.name %>">
+            </div>
+            <div class="field">
+                <label> Prénom</label>
+                <input name="Prénom"placeholder="First Name" type="text" value="<%= locals.employee && employee.firstname %>">
+              </div>
+              <div class="field">
+                <label> E-mail </label>
+                <input name= "E-mail"placeholder="E-mail" type="text" value="<%= locals.employee && employee.email %>">
+              </div>
+              <div class="field">
+                <label> Adresse Postale </label>
+                <input name= "adresse"placeholder="adresse" type="text" value="<%= locals.employee && employee.address %>">
+              </div>
+              <div class="field">
+                <label> Numéro de téléphone </label>
+                <input  name= "Numéro de téléphone"placeholder="Téléphone" type="text" value="<%= locals.employee && employee.telephone %>">
+              </div>
+              <div class="field">
+                <label> Mot de passe  </label>
+                <input name="Mot de passe" placeholder="Password" type="password" value="<%= locals.employee && employee.password %>">
+              </div>
+              <% if(locals.employee){%>
+                <div id="btnCreate" class="ui submit button">Modifier un employé  </div>
+                <%}else {%>
+                 <div id="btnCreate" class="ui submit button">Créer un employé  </div>
+                <% }%>
+        </div>
+      </div>
+
+</body>
+<footer>
+<%- include('../partials/footer'); %>
+</footer>
+
+<script>
+
+  document.getElementById("btnCreate").addEventListener('click',(event)=>{
+    // collecter les infos du formulaire dans un object
+    const id = document.getElementsByName("id")[0].value;
+    const nom = document.getElementsByName("nom")[0].value;
+    const prenom = document.getElementsByName("Prénom")[0].value;
+    const adresse = document.getElementsByName("adresse")[0].value;
+    const email = document.getElementsByName("E-mail")[0].value;
+    const telephone = document.getElementsByName("Numéro de téléphone")[0].value;
+    const motdepasse = document.getElementsByName("Mot de passe")[0].value;
+  
+  
+    const formData = {
+      nom: nom,
+      prenom: prenom,
+      adresse: adresse,
+      email: email,
+      telephone: telephone,
+      motdepasse: motdepasse,
+    };
+    // envoyer le POST de axiox sur la route pour Ajouter/modifier
+    if(id!== "") {
+    axios.put('/employee/'+ id+"/?token=<%= token  %>", formData,{
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      console.log(response.data)
+      if(response.data == "data updated"){
+        window.location = "/employee?token=<%= token  %>"
+      }
+    })
+    .catch(error => console.log(error))
+  } else {
+    axios.post('/employee/?token=<%= token  %>', formData, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+        })
+    .then(response => {
+      if(response.data == "ok"){
+        window.location = "/employee?token=<%= token  %> "
+      }
+    })
+    .catch(error => console.log(error))
+  }
+  })
+  
+  </script>

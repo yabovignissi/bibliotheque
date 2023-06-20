@@ -1,0 +1,59 @@
+<%- include('./partials/header'); %>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <body>
+    <div class="container">
+      <form action="/login" method="post">
+        <h2>Connexion</h2>
+        <div class="ui inverted segment">
+          <div class="ui inverted form">
+            <div class="two fields">
+              <div class="field">
+                <label>Adress-mail</label>
+                <input placeholder="Email" type="text" name="email">
+              </div>
+              <div class="field">
+                <label>Mot de passe</label>
+                <input placeholder="Password" type="password" name="password">
+              </div>
+            </div>
+            <div id="btnCreate" class="ui submit button">Connexion</div>
+            <p>Need an account? <a href="/signup">Signup</a></p>
+          </div>
+        </div>
+  </body>
+  <footer>
+    <%- include('./partials/footer'); %>
+  </footer>
+  <script>
+    
+    document.getElementById("btnCreate").addEventListener('click', (event) => {
+
+      const email = document.getElementsByName("email")[0].value;
+      const password = document.getElementsByName("password")[0].value;
+
+      const formData = {
+        email: email,
+        password: password,
+
+      };
+      axios.post('/login', formData)
+        .then(response => {
+          console.log(response)
+          if (response.data.accessToken) {
+            const token= response.data.accessToken
+            console.log(response)
+           localStorage.setItem("token",token)
+           location= ('/?token='+token)
+          }else {
+          console.log("Invalid email or password");
+    }
+          
+        })
+        .catch(error => {
+          alert('Erreur de connexion,  veuillez verifier votre saisie')
+          //console.log(error.message);
+        });
+    })
+  </script>
+
+  </html>

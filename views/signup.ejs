@@ -1,0 +1,80 @@
+<%- include('./partials/header'); %>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<body>
+<div class="container">
+<form action="/signup" method="post">
+<h2>Registrement</h2>
+<div class="ui inverted segment">
+    <div class="ui inverted form">
+      <div class="two fields">
+        <div class="field">
+          <label> Nom  </label>
+          <input name="nom" placeholder="Name" type="text">
+        </div>
+        <div class="field">
+            <label> Prénom</label>
+            <input name="Prénom"placeholder="First Name" type="text">
+          </div>
+          <div class="field">
+            <label> E-mail </label>
+            <input name= "E-mail"placeholder="E-mail" type="text">
+          </div>
+          <div class="field">
+            <label> Adresse Postale </label>
+            <input name= "adresse"placeholder="adresse" type="text">
+          </div>
+          <div class="field">
+            <label> Numéro de téléphone </label>
+            <input  name= "Numéro de téléphone"placeholder="Téléphone" type="text">
+          </div>
+          <div class="field">
+            <label> Mot de passe  </label>
+            <input name="Mot de passe" placeholder="Password" type="text">
+          </div>
+
+          <input name="abonne" type="hidden" value="Subscriber">
+      </div>
+      <div id="btnCreate" class="ui submit button">sign</div>
+    </div>
+  </div>
+</body>
+<footer>
+    <%- include('./partials/footer'); %>
+</footer>
+
+<script>
+
+  document.getElementById("btnCreate").addEventListener('click',(event)=>{
+    // collecter les infos du formulaire dans un object
+    const nom = document.getElementsByName("nom")[0].value;
+    const prenom = document.getElementsByName("Prénom")[0].value;
+    const adresse = document.getElementsByName("adresse")[0].value;
+    const email = document.getElementsByName("E-mail")[0].value;
+    const telephone = document.getElementsByName("Numéro de téléphone")[0].value;
+    const motdepasse = document.getElementsByName("Mot de passe")[0].value;
+    const abonne= document.getElementsByName("abonne")[0].value
+  
+  
+    const formData = {
+      nom: nom,
+      prenom: prenom,
+      adresse: adresse,
+      email: email,
+      telephone: telephone,
+      motdepasse: motdepasse,
+      abonne:abonne
+    };
+    // envoyer le POST de axiox sur la route pour Ajouter/modifier
+      axios.post('/signup', formData)
+      .then(response => {
+        if(response.data == "ok"){
+          window.location = "/login"
+        }
+      })
+      .catch(error => console.log(error))
+    
+  })
+  
+  </script>
+</html>
